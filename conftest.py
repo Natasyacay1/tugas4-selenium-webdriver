@@ -11,6 +11,7 @@ def driver():
     opts = Options()
     opts.add_argument("--window-size=1366,768")
 
+    # Opsi khusus server CI (GitHub Actions)
     if os.getenv("HEADLESS"):
         opts.add_argument("--headless=new")
         opts.add_argument("--no-sandbox")
