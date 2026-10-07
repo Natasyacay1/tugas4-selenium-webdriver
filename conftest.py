@@ -3,31 +3,26 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+BASE = "https://ultimateqa.com/automation/"
+
+
 @pytest.fixture
 def driver():
-    """Fixture global untuk Selenium WebDriver."""
-    options = Options()
-    
-    # Mode headless untuk CI/CD
-    if os.getenv("HEADLESS") == "1":
-        options.add_argument("--headless=new")
-    
-    # Flag wajib untuk lingkungan Linux / CI
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
+    opts = Options()
+    opts.add_argument("--window-size=1366,768")
 
-    # Jika Anda menggunakan Selenium Grid, logika GRID_URL tetap bisa dipakai di sini
+    if os.getenv("HEADLESS"):
+        opts.add_argument("--headless=new")
+        opts.add_argument("--no-sandbox")
+        opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--disable-gpu")
+
     grid_url = os.getenv("GRID_URL")
     if grid_url:
-        d = webdriver.Remote(command_executor=grid_url, options=options)
+        d = webdriver.Remote(command_executor=grid_url, options=opts)
     else:
-        d = webdriver.Chrome(options=options)
+        d = webdriver.Chrome(options=opts)
 
-    # Membuka BASE URL langsung dari fixture jika repository Anda menggunakan variabel BASE
-    base_url = os.getenv("BASE_URL", "https://example.com") # Sesuaikan dengan URL bawaan repo Anda
-    d.get(base_url)
-    
+    d.get(BASE)
     yield d
     d.quit()
