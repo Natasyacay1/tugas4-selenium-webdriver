@@ -5,7 +5,6 @@ from selenium.webdriver.chrome.options import Options
 
 BASE = "https://ultimateqa.com/automation/"
 
-
 @pytest.fixture
 def driver():
     opts = Options()
